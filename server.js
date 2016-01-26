@@ -17,8 +17,14 @@ app.post('/', function (req, res) {
         body += data
     });
     req.on("end", function () {
-            var expResult = mathjs.eval(body);
-            res.send(expResult.toString());
+            try {
+                var expResult = mathjs.eval(body);
+                res.send(expResult.toString());
+            } catch (e) {
+                res.send("Неправильный формат ввода!");
+                console.log(e.name);
+                console.log(e.message);
+            }
         }
     );
 });

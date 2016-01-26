@@ -47,7 +47,6 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
-
 	var Expression = __webpack_require__(148);
 
 	React.render(React.createElement(Expression, null), document.getElementById('container'));
@@ -18918,7 +18917,8 @@
 	    getInitialState: function getInitialState() {
 	        return {
 	            res: "",
-	            post: ""
+	            post: "",
+	            err: ""
 	        };
 	    },
 
@@ -18941,6 +18941,11 @@
 	                        React.createElement(
 	                            "td",
 	                            null,
+	                            React.createElement(
+	                                "p",
+	                                null,
+	                                this.state.err
+	                            ),
 	                            React.createElement("input", { type: "text", value: this.state.res, onChange: this.handleChange })
 	                        )
 	                    ),
@@ -19048,6 +19053,7 @@
 	    changeText: function changeText(event) {
 	        event.preventDefault();
 	        var self = this;
+	        self.setState({ err: "" });
 	        self.setState({ res: this.state.res.concat(event.target.value) });
 	    },
 	    _onChange: function _onChange(event) {
@@ -19060,8 +19066,13 @@
 	        xhr.send(target);
 	        xhr.onload = function () {
 	            var post = xhr.responseText;
-	            self.setState({ res: post });
-	            console.log("Success!");
+	            if (post.charAt(0) == "Н") {
+	                self.setState({ err: post });
+	                self.setState({ res: "" });
+	            } else {
+	                self.setState({ res: post });
+	                console.log("Success!");
+	            }
 	        };
 	        xhr.onerror = function () {
 	            console.log("Error");

@@ -4,7 +4,8 @@ var Expression = React.createClass({
     getInitialState: function () {
         return {
             res: "",
-            post: ""
+            post: "",
+            err: ""
         };
     },
 
@@ -18,6 +19,7 @@ var Expression = React.createClass({
                     <tbody>
                     <tr>
                         <td>
+                            <p>{this.state.err}</p>
                             <input type="text" value={this.state.res} onChange={this.handleChange}/>
                         </td>
                     </tr>
@@ -56,6 +58,7 @@ var Expression = React.createClass({
     changeText: function (event) {
         event.preventDefault();
         var self = this;
+        self.setState({err: ""});
         self.setState({res: this.state.res.concat(event.target.value)});
     },
     _onChange: function (event) {
@@ -68,8 +71,14 @@ var Expression = React.createClass({
         xhr.send(target);
         xhr.onload = function () {
             var post = xhr.responseText;
-            self.setState({res: post});
-            console.log("Success!")
+            if (post.charAt(0) == "Н") {
+                self.setState({err: post});
+                self.setState({res: ""});
+            }
+            else {
+                self.setState({res: post});
+                console.log("Success!")
+            }
         };
         xhr.onerror = function () {
             console.log("Error")
